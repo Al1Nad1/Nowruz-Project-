@@ -20,47 +20,6 @@ public class Song {
         this.likes = 0;
         this.dislikes = 0;
     }
-    public void addLike() {
-        likes++;
-        saveToFile();
-    }
-
-    public void addDislike() {
-        dislikes++;
-        saveToFile();
-    }
-
-    public void addComment(String comment) {
-        comments.add(comment);
-        saveToFile();
-    }
-
-    public void saveToFile() {
-        File dir = new File("data/songs/");
-        if (!dir.exists()) dir.mkdirs();
-
-        File file = new File(dir, title.replaceAll(" ", "_") + ".txt");
-
-        try (PrintWriter writer = new PrintWriter(new FileWriter(file))) {
-            writer.println("Title: " + title);
-            writer.println("Artist: " + artist);
-            writer.println("Genre: " + genre);
-            writer.println("Lyrics:");
-            writer.println(lyrics);
-            writer.println();
-            writer.println("Likes: " + likes);
-            writer.println("Dislikes: " + dislikes);
-            writer.println();
-            writer.println("Comments:");
-            for (String c : comments) {
-                writer.println("- " + c);
-            }
-            writer.println("──────────────────────");
-        } catch (IOException e) {
-            System.out.println("❌ Error saving song file.");
-        }
-    }
-
 
     public static Song loadFromFile(String title) {
         File file = new File("data/songs/" + title.replaceAll(" ", "_") + ".txt");
@@ -103,6 +62,46 @@ public class Song {
         }
     }
 
+    public void saveToFile() {
+        File dir = new File("data/songs/");
+        if (!dir.exists()) dir.mkdirs();
+
+        File file = new File(dir, title.replaceAll(" ", "_") + ".txt");
+
+        try (PrintWriter writer = new PrintWriter(new FileWriter(file))) {
+            writer.println("Title: " + title);
+            writer.println("Artist: " + artist);
+            writer.println("Genre: " + genre);
+            writer.println("Lyrics:");
+            writer.println(lyrics);
+            writer.println();
+            writer.println("Likes: " + likes);
+            writer.println("Dislikes: " + dislikes);
+            writer.println();
+            writer.println("Comments:");
+            for (String c : comments) {
+                writer.println("- " + c);
+            }
+            writer.println("──────────────────────");
+        } catch (IOException e) {
+            System.out.println("❌ Error saving song file.");
+        }
+    }
+
+    public void addLike() {
+        likes++;
+        saveToFile();
+    }
+
+    public void addDislike() {
+        dislikes++;
+        saveToFile();
+    }
+
+    public void addComment(String comment) {
+        comments.add(comment);
+        saveToFile();
+    }
 
     public void displayFull() {
         System.out.println("🎵 Title: " + title);
@@ -117,7 +116,6 @@ public class Song {
         System.out.println("──────────────────────");
     }
 
-    // Getters
     public String getTitle() { return title; }
     public String getArtist() { return artist; }
     public String getGenre() { return genre; }

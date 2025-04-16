@@ -22,8 +22,8 @@ public class UserPanel {
                     "📄 7. View Q&A",
                     "🧑‍🎤 8. Follow an artist",
                     "📋 9. View following list",
-                    "10. Comment on a song ✍️",
-                    "11. View song details by title 🔍",
+                    "✍️ 10. Comment on a song",
+                    "🔍 11. View song details by title",
 
                     "🚪 0. Logout"
             );
@@ -48,8 +48,8 @@ public class UserPanel {
                 }
                 case 3 -> {
                     System.out.print("Song title to like: ");
-                    String t = scanner.nextLine();
-                    UserService.likeSong(user, t);
+                    String title = scanner.nextLine();
+                    SongService.likeSong(user.getUsername(), title); // ✅ send username
                 }
                 case 4 -> {
                     System.out.print("Song title to dislike: ");

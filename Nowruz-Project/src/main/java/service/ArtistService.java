@@ -7,18 +7,14 @@ import java.io.*;
 
 public class ArtistService {
 
-    private static final String SONGS_FILE = "data/songs.txt";
     private static final String EDIT_REQUESTS_FILE = "data/edit_requests.txt";
 
-    // Upload a new song
     public static void uploadSong(Artist artist, String title, String genre, String lyrics) {
         Song song = new Song(title, artist.getUsername(), genre, lyrics);
-        song.saveToFile(); // ✅ Save as a formatted .txt file in data/songs/
+        song.saveToFile();
         System.out.println("✅ Song uploaded.");
     }
 
-
-    // Submit a genre update request
     public static void requestGenreUpdate(Artist artist, String newGenre) {
         try (FileWriter writer = new FileWriter(EDIT_REQUESTS_FILE, true)) {
             writer.write(artist.getUsername() + "," + newGenre + "\n");
@@ -28,24 +24,23 @@ public class ArtistService {
         }
     }
 
-    // View songs uploaded by this artist
     public static void viewMySongs(String artistUsername) {
         File folder = new File("data/songs/");
         if (!folder.exists()) {
-            System.out.println("📁 No songs found.");
+            System.out.println("📁 No songs directory found.");
             return;
         }
 
         File[] files = folder.listFiles((dir, name) -> name.endsWith(".txt"));
         if (files == null || files.length == 0) {
-            System.out.println("📁 No songs found.");
+            System.out.println("📂 No songs to view.");
             return;
         }
 
         boolean found = false;
-
         for (File file : files) {
-            Song song = Song.loadFromFile(file.getName().replace(".txt", "").replace("_", " "));
+            String title = file.getName().replace(".txt", "").replace("_", " ");
+            Song song = Song.loadFromFile(title);
             if (song != null && song.getArtist().equals(artistUsername)) {
                 song.displayFull();
                 found = true;
@@ -56,6 +51,4 @@ public class ArtistService {
             System.out.println("🪹 You haven't uploaded any songs yet.");
         }
     }
-
 }
-

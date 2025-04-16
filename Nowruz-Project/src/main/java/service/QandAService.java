@@ -4,37 +4,37 @@ import java.io.*;
 
 public class QandAService {
 
-    private static final String FILE = "data/qna.txt";
+    private static final String QNA_FILE = "data/qna.txt";
 
-    public static void askQuestion(String songTitle, String question) {
-        try (FileWriter writer = new FileWriter(FILE, true)) {
-            writer.write("[" + songTitle + "] Q: " + question + "\n");
-            System.out.println("✅ Question added.");
+    public static void askQuestion(String username, String songTitle, String question) {
+        try (FileWriter writer = new FileWriter(QNA_FILE, true)) {
+            writer.write("[Q] " + username + " → " + songTitle + ": " + question + "\n");
+            System.out.println("❓ Question submitted.");
         } catch (IOException e) {
-            System.out.println("Error writing question.");
+            System.out.println("❌ Error saving question.");
         }
     }
 
     public static void answerQuestion(String songTitle, String answer) {
-        try (FileWriter writer = new FileWriter(FILE, true)) {
-            writer.write("[" + songTitle + "] A: " + answer + "\n");
-            System.out.println("✅ Answer added.");
+        try (FileWriter writer = new FileWriter(QNA_FILE, true)) {
+            writer.write("[A] Answer for " + songTitle + ": " + answer + "\n");
+            System.out.println("✅ Answer submitted.");
         } catch (IOException e) {
-            System.out.println("Error writing answer.");
+            System.out.println("❌ Error saving answer.");
         }
     }
 
     public static void viewQnA(String songTitle) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(FILE))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(QNA_FILE))) {
             String line;
-            System.out.println("Q&A for: " + songTitle);
+            System.out.println("📄 Q&A for song: " + songTitle);
             while ((line = reader.readLine()) != null) {
-                if (line.startsWith("[" + songTitle + "]")) {
-                    System.out.println(line.replace("[" + songTitle + "]", "").trim());
+                if (line.contains(songTitle)) {
+                    System.out.println("  " + line);
                 }
             }
         } catch (IOException e) {
-            System.out.println("Error reading Q&A.");
+            System.out.println("❌ Error reading QnA.");
         }
     }
 }
