@@ -22,6 +22,9 @@ public class UserPanel {
                     "📄 7. View Q&A",
                     "🧑‍🎤 8. Follow an artist",
                     "📋 9. View following list",
+                    "10. Comment on a song ✍️",
+                    "11. View song details by title 🔍",
+
                     "🚪 0. Logout"
             );
 
@@ -82,6 +85,19 @@ public class UserPanel {
                     System.out.println("Logging out...");
                     return;
                 }
+                case 10 -> {
+                    System.out.print("Song title: ");
+                    String t = scanner.nextLine();
+                    System.out.print("Your comment: ");
+                    String c = scanner.nextLine();
+                    SongService.commentOnSong(t, c);
+                }
+                case 11 -> {
+                    System.out.print("Song title: ");
+                    String t = scanner.nextLine();
+                    SongService.viewSongDetails(t);
+                }
+
                 default -> System.out.println("Invalid choice.");
             }
         }

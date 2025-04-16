@@ -3,39 +3,44 @@ package service;
 import model.Song;
 
 import java.io.*;
-import java.util.*;
 
 public class SearchService {
 
     public static void searchSongByTitle(String keyword) {
-        searchSong(keyword.toLowerCase(), "title");
+        searchInFiles(keyword.toLowerCase(), "title");
     }
 
     public static void searchSongByGenre(String keyword) {
-        searchSong(keyword.toLowerCase(), "genre");
+        searchInFiles(keyword.toLowerCase(), "genre");
     }
 
-    private static void searchSong(String keyword, String type) {
-        try (BufferedReader reader = new BufferedReader(new FileReader("data/songs.txt"))) {
-            String line;
-            boolean found = false;
-
-            while ((line = reader.readLine()) != null) {
-                Song song = Song.fromLine(line);
-                if (song == null) continue;
-
-                if (type.equals("title") && song.getTitle().toLowerCase().contains(keyword)) {
-                    song.display();
-                    found = true;
-                } else if (type.equals("genre") && song.getGenre().toLowerCase().contains(keyword)) {
-                    song.display();
-                    found = true;
-                }
-            }
-
-            if (!found) System.out.println("🔍 No matching songs found.");
-        } catch (IOException e) {
-            System.out.println("Error reading songs.");
+    private static void searchInFiles(String keyword, String type) {
+        File folder = new File("data/songs/");
+        if (!folder.exists()) {
+            System.out.println("📁 No songs directory found.");
+            return;
         }
+
+        File[] files = folder.listFiles((dir, name) -> name.endsWith(".txt"));
+        if (files == null || files.length == 0) {
+            System.out.println("📂 No songs to search.");
+            return;
+        }
+
+        boolean found = false;
+
+        for (File file : files) {
+            String titleFromFile = file.getName().replace(".txt", "").replace("_", " ");
+            Song song = Song.loadFromFile(titleFromFile);
+            if (song == null) continue;
+
+            if ((type.equals("title") && song.getTitle().toLowerCase().contains(keyword)) ||
+                    (type.equals("genre") && song.getGenre().toLowerCase().contains(keyword))) {
+                song.displayFull();
+                found = true;
+            }
+        }
+
+        if (!found) System.out.println("🔍 No matching songs found.");
     }
 }

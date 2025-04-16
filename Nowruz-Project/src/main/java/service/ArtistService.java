@@ -13,13 +13,10 @@ public class ArtistService {
     // Upload a new song
     public static void uploadSong(Artist artist, String title, String genre, String lyrics) {
         Song song = new Song(title, artist.getUsername(), genre, lyrics);
-        try (FileWriter writer = new FileWriter(SONGS_FILE, true)) {
-            writer.write(song.toLine() + "\n");
-            System.out.println("✅ Song uploaded.");
-        } catch (IOException e) {
-            System.out.println("❌ Error uploading song.");
-        }
+        song.saveToFile(); // ✅ Save as a formatted .txt file in data/songs/
+        System.out.println("✅ Song uploaded.");
     }
+
 
     // Submit a genre update request
     public static void requestGenreUpdate(Artist artist, String newGenre) {
@@ -33,31 +30,32 @@ public class ArtistService {
 
     // View songs uploaded by this artist
     public static void viewMySongs(String artistUsername) {
-        File file = new File(SONGS_FILE);
-        if (!file.exists()) {
-            System.out.println("❌ No songs file found.");
+        File folder = new File("data/songs/");
+        if (!folder.exists()) {
+            System.out.println("📁 No songs found.");
+            return;
+        }
+
+        File[] files = folder.listFiles((dir, name) -> name.endsWith(".txt"));
+        if (files == null || files.length == 0) {
+            System.out.println("📁 No songs found.");
             return;
         }
 
         boolean found = false;
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String line;
-
-            while ((line = reader.readLine()) != null) {
-                Song song = Song.fromLine(line);
-                if (song != null && song.getArtist().equals(artistUsername)) {
-                    song.display();
-                    found = true;
-                }
+        for (File file : files) {
+            Song song = Song.loadFromFile(file.getName().replace(".txt", "").replace("_", " "));
+            if (song != null && song.getArtist().equals(artistUsername)) {
+                song.displayFull();
+                found = true;
             }
+        }
 
-            if (!found) {
-                System.out.println("🪹 You haven't uploaded any songs yet.");
-            }
-
-        } catch (IOException e) {
-            System.out.println("❌ Error reading songs.");
+        if (!found) {
+            System.out.println("🪹 You haven't uploaded any songs yet.");
         }
     }
+
 }
+
