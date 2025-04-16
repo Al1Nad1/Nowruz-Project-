@@ -1,49 +1,63 @@
 package service;
 
 import model.Artist;
+import model.Song;
 
 import java.io.*;
-import java.util.*;
 
 public class ArtistService {
 
+    private static final String SONGS_FILE = "data/songs.txt";
+    private static final String EDIT_REQUESTS_FILE = "data/edit_requests.txt";
+
+    // Upload a new song
     public static void uploadSong(Artist artist, String title, String genre, String lyrics) {
-        try (FileWriter writer = new FileWriter("data/songs.txt", true)) {
-            writer.write(artist.getUsername() + "," + title + "," + genre + "," + lyrics.replace(",", ";") + "\n");
+        Song song = new Song(title, artist.getUsername(), genre, lyrics);
+        try (FileWriter writer = new FileWriter(SONGS_FILE, true)) {
+            writer.write(song.toLine() + "\n");
             System.out.println("✅ Song uploaded.");
         } catch (IOException e) {
-            System.out.println("Error uploading song.");
+            System.out.println("❌ Error uploading song.");
         }
     }
 
+    // Submit a genre update request
     public static void requestGenreUpdate(Artist artist, String newGenre) {
-        try (FileWriter writer = new FileWriter("data/edit_requests.txt", true)) {
+        try (FileWriter writer = new FileWriter(EDIT_REQUESTS_FILE, true)) {
             writer.write(artist.getUsername() + "," + newGenre + "\n");
             System.out.println("📨 Genre update request sent.");
         } catch (IOException e) {
-            System.out.println("Error submitting edit request.");
+            System.out.println("❌ Error submitting genre update request.");
         }
     }
 
+    // View songs uploaded by this artist
     public static void viewMySongs(String artistUsername) {
-        try (BufferedReader reader = new BufferedReader(new FileReader("data/songs.txt"))) {
+        File file = new File(SONGS_FILE);
+        if (!file.exists()) {
+            System.out.println("❌ No songs file found.");
+            return;
+        }
+
+        boolean found = false;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
-            boolean found = false;
+
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",", 4);
-                if (parts[0].equals(artistUsername)) {
+                Song song = Song.fromLine(line);
+                if (song != null && song.getArtist().equals(artistUsername)) {
+                    song.display();
                     found = true;
-                    System.out.println("🎵 Title: " + parts[1]);
-                    System.out.println("   Genre: " + parts[2]);
-                    System.out.println("   Lyrics: " + parts[3]);
-                    System.out.println("-----------------------------");
                 }
             }
+
             if (!found) {
-                System.out.println("No songs uploaded yet.");
+                System.out.println("🪹 You haven't uploaded any songs yet.");
             }
+
         } catch (IOException e) {
-            System.out.println("Error reading songs.");
+            System.out.println("❌ Error reading songs.");
         }
     }
 }

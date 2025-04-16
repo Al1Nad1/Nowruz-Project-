@@ -11,7 +11,7 @@ public class LoginPanel {
     public static void start() {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Welcome to Nowruz Platform!");
+        System.out.println("Welcome to V01Dify!");
         System.out.print("Enter your role (user / artist / admin): ");
         String role = scanner.nextLine().trim().toLowerCase();
 

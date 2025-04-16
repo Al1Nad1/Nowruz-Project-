@@ -13,17 +13,18 @@ public class UserPanel {
 
         while (true) {
             List<String> menu = List.of(
-                    "1. Search songs by title 🎯",
-                    "2. Search songs by genre 🎵",
-                    "3. Like a song 👍",
-                    "4. Dislike a song 👎",
-                    "5. Ask a question ❓",
-                    "6. Answer a question 💬",
-                    "7. View Q&A 📄",
-                    "8. Follow an artist 🧑‍🎤",
-                    "9. View following list 📋",
-                    "0. Logout 🚪"
+                    "🎯 1. Search songs by title",
+                    "🎵 2. Search songs by genre",
+                    "👍 3. Like a song",
+                    "👎 4. Dislike a song",
+                    "❓ 5. Ask a question",
+                    "💬 6. Answer a question",
+                    "📄 7. View Q&A",
+                    "🧑‍🎤 8. Follow an artist",
+                    "📋 9. View following list",
+                    "🚪 0. Logout"
             );
+
 
             ConsoleUI.printMenu("🎧 User Panel", menu);
 
